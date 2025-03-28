@@ -1,9 +1,12 @@
 # prism-cipher
 
-![img](https://github.com/user-attachments/assets/ef593cd7-5563-4420-b1e5-0b93070eed9c)
+![img](https://github.com/user-attachments/assets/96abd9b4-540c-45e9-b3cc-e6ac83f81545)
+
+-=-
 
 Takes text and makes it into an image, with an additional layer of security
 
+-=-
 
 This is a relatively bare bones script that both encrypts and decrypts text through the medium of color, written entirely in Python. It is a work in progress, so expect more updates soon.
 
