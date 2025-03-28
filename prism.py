@@ -1,11 +1,14 @@
 import os
 import math
 import time
+from tkinter import filedialog
 from PIL import Image
+
+dir = "img.png"
 
 def phc():
     try:
-        img = Image.open("img.png")
+        img = Image.open(dir)
     except FileNotFoundError:
         print("Image file not found")
         return
@@ -25,7 +28,7 @@ def pkey(key):
     return keys
 
 def encrypt(rgb, key=""):
-    img = Image.open("img.png")
+    img = Image.open(dir)
     h, w = img.size
     img.close()
     img = Image.new("RGB", (h, w), (0, 0, 0))
@@ -45,7 +48,7 @@ def encrypt(rgb, key=""):
             break
     
     img.putdata(pixels)
-    img.save("img.png")
+    img.save(dir)
     print("Image modified and saved")
 
 def decrypt(key=""):
@@ -107,92 +110,101 @@ if not os.path.exists("text.txt"):
         pass
 
 while True:
-    print("Prism Cipher by Alex Hall")
-    print("\n1. Encrypt Text\n2. Decrypt Image\n3. Make Image File\n4. Exit\n")
-    operation = input()
-    try:
-        n = int(operation)
-        if n > 0 and n < 5:
-            break
-        else:
-            print("\nInvalid input\n")
-    except:
-        print("\nInvalid input\n")
-
-operation = int(operation)
-
-if operation == 1:
-    text = input("What text would you like to encode? Leave blank to use the text file.\n")
-    if not text:
-        with open("input.txt") as f:
-            text = f.read()
-    key = input("\nEnter some hexadecimal color values (separated by spaces) to provide extra encryption, or leave blank for no cipher: ")
-    print("Loading...")
-    start_time = time.time()
-    text_rgb = hex_to_rgb(text.encode('utf-8').hex())
-    encrypt(text_rgb, key)
-    end_time = time.time()
-    print("Finished creating image in " + str(end_time - start_time) + " seconds.")
-elif operation == 2:
-    key = input("\nEnter some hexadecimal color values (separated by spaces) to provide extra encryption, or leave blank for no cipher: ")
-    print("Loading...")
-    start_time = time.time()
-    color_map = decrypt(key)
-    for x in range(len(color_map)):
-        color_map[x] = rgb_to_hex(color_map[x])
-    color_map = ''.join(color_map)
-    text_output = ''.join([chr(int(color_map[i:i+2], 16)) for i in range(0, len(color_map), 2)])
-    with open("text.txt", "w") as file:
-        file.write(text_output)
-    end_time = time.time()
-    print("Finished writing to file in " + str(end_time - start_time) + " seconds")
-elif operation == 3:
     while True:
+        print("Prism Cipher by Alex Hall")
+        print("\n1. Encrypt text\n2. Decrypt image\n3. Make image file\n4. Select directory\n5. Exit\n")
+        operation = input()
         try:
-            print("\nWARNING: This will erase your current image file!")
-            print("Enter two values separated by spaces for width and height,")
-            print("one value for a uniform square, or leave blank for default (256x256).")
-            square = input("What should the width and height of the square be?\n").strip()
-            
-            if square == "":
-                width, height = 256, 256
-            else:
-                square_values = square.split()
-                if len(square_values) == 1:
-                    try:
-                        width = height = int(square_values[0])
-                    except ValueError:
-                        print("Invalid input")
-                        continue
-                elif len(square_values) == 2:
-                    try:
-                        width = int(square_values[0])
-                        height = int(square_values[1])
-                    except ValueError:
-                        print("Invalid values")
-                        continue
-                else:
-                    print("Invalid input format (please enter one or two numbers)")
-                    continue
-
-            if width > 2048 or height > 2048:
-                print("The size is too big! Maximum is 2048x2048.")
-                print("You can still import a larger image file, however.")
-                continue
-            elif width <= 0 or height <= 0:
-                print("The size must be greater than 0")
-                continue
-            else:
+            n = int(operation)
+            if n > 0 and n < 6:
                 break
+            else:
+                print("\nInvalid input\n")
+        except:
+            print("\nInvalid input\n")
 
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            width, height = 256, 256
-            break
-    
-    img = Image.new("RGB", (width, height), (0, 0, 0))
-    img.save("img.png")
-    print("New square created!")
+    operation = int(operation)
 
-elif operation == 4:
-    quit(1)
+    if operation == 1:
+        text = input("What text would you like to encode? Leave blank to use the text file.\n")
+        if not text:
+            with open("input.txt") as f:
+                text = f.read()
+        key = input("\nEnter some hexadecimal color values (separated by spaces) to provide extra encryption, or leave blank for no cipher: ")
+        print("Loading...")
+        start_time = time.time()
+        text_rgb = hex_to_rgb(text.encode('utf-8').hex())
+        encrypt(text_rgb, key)
+        end_time = time.time()
+        print("Finished creating image in " + str(end_time - start_time) + " seconds.")
+    elif operation == 2:
+        key = input("\nEnter some hexadecimal color values (separated by spaces) to provide extra encryption, or leave blank for no cipher: ")
+        print("Loading...")
+        start_time = time.time()
+        color_map = decrypt(key)
+        for x in range(len(color_map)):
+            color_map[x] = rgb_to_hex(color_map[x])
+        color_map = ''.join(color_map)
+        text_output = ''.join([chr(int(color_map[i:i+2], 16)) for i in range(0, len(color_map), 2)])
+        with open("text.txt", "w") as file:
+            file.write(text_output)
+        end_time = time.time()
+        print("Finished writing to file in " + str(end_time - start_time) + " seconds")
+    elif operation == 3:
+        while True:
+            try:
+                print("\nWARNING: This will erase your current image file!")
+                print("Enter two values separated by spaces for width and height,")
+                print("one value for a uniform square, or leave blank for default (256x256).")
+                square = input("What should the width and height of the square be?\n").strip()
+
+                if square == "":
+                    width, height = 256, 256
+                else:
+                    square_values = square.split()
+                    if len(square_values) == 1:
+                        try:
+                            width = height = int(square_values[0])
+                        except ValueError:
+                            print("Invalid input")
+                            continue
+                    elif len(square_values) == 2:
+                        try:
+                            width = int(square_values[0])
+                            height = int(square_values[1])
+                        except ValueError:
+                            print("Invalid values")
+                            continue
+                    else:
+                        print("Invalid input format (please enter one or two numbers)")
+                        continue
+
+                if width > 2048 or height > 2048:
+                    print("The size is too big! Maximum is 2048x2048.")
+                    print("You can still import a larger image file, however.")
+                    continue
+                elif width <= 0 or height <= 0:
+                    print("The size must be greater than 0")
+                    continue
+                else:
+                    break
+
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                width, height = 256, 256
+                break
+                
+        img = Image.new("RGB", (width, height), (0, 0, 0))
+        img.save("img.png")
+        print("New square created!")
+    elif operation == 4:
+        print("Leave this blank to use the default image file,")
+        dir = input("or put anything else to select a file.")
+        if dir != "":
+            dir = filedialog.askopenfilename()
+            print("\nFile " + dir + " chosen")
+        else:
+            dir = "img.png"
+            print("\nDefault file img.png chosen")
+    elif operation == 5:
+        quit(1)
