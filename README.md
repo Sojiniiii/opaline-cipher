@@ -18,7 +18,7 @@ Prism Cipher is a lightweight, simple script that can encrypt any text file into
 <img src=https://github.com/user-attachments/assets/f2ca46ff-28ae-4651-8b3c-28ee4ff9d114>
 <br>
 <h2>How to Install</h2>
-The setup process, mostly owing to the simplicity of the program, is easy. The program, because it is an image editor, requires <a href=https://pypi.org/project/pillow/>Pillow</a>. You may have to install it using pip if you do not have it already.
+The setup process, mostly owing to the simplicity of the program, is easy. The program, because it is an image editor, requires <a href=https://pypi.org/project/pillow/ target="_blank" rel="noopener noreferrer">Pillow</a>. You may have to install it using pip if you do not have it already.
 <br> <br>
 First, download prism.py and place it in its own folder somewhere. If you do not place it in its own folder, it may be difficult to determine where the files it creates are.
 <br> <br>
