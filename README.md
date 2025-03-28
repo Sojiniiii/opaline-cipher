@@ -14,4 +14,8 @@ This is a relatively bare bones script that both encrypts and decrypts text thro
 </p>
 <br>
 <br>
-In terms of licenses, if you choose to make a derivative of this project or make something mostly inspired by it (basically, that does the same thing in the same way), please credit me. Thank you! 
+Prism Cipher can encrypt any text file into a PNG. Additionally, you can encrypt images in any width and height. For example, here's the entire Bee Movie script, encrypted with Prism. Feel free to use the program to decrypt it!
+<p> </p>
+<p align=center>
+<img src=https://github.com/user-attachments/assets/f2ca46ff-28ae-4651-8b3c-28ee4ff9d114>
+</p>
