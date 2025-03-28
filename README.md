@@ -4,7 +4,7 @@
 
 <br>
 <br>
-Takes text and makes it into an image, with an additional layer of security
+Takes text and makes it into an image
 <br>
 <br>
 -=-
