@@ -199,7 +199,7 @@ while True:
         print("New square created!")
     elif operation == 4:
         print("Leave this blank to use the default image file,")
-        dir = input("or put anything else to select a file.")
+        dir = input("or put anything else to select a file. ")
         if dir != "":
             dir = filedialog.askopenfilename()
             print("\nFile " + dir + " chosen")
