@@ -126,7 +126,7 @@ if operation == 1:
     if not text:
         with open("input.txt") as f:
             text = f.read()
-    key = input("\nEnter 1-3 hexadecimal values (separated by spaces), or leave blank for no cipher: ")
+    key = input("\nEnter some hexadecimal color values (separated by spaces) to provide extra encryption, or leave blank for no cipher: ")
     print("Loading...")
     start_time = time.time()
     text_rgb = hex_to_rgb(text.encode('utf-8').hex())
@@ -134,7 +134,7 @@ if operation == 1:
     end_time = time.time()
     print("Finished creating image in " + str(end_time - start_time) + " seconds.")
 elif operation == 2:
-    key = input("\nEnter 1-3 hexadecimal values (separated by spaces), or leave blank for no cipher: ")
+    key = input("\nEnter some hexadecimal color values (separated by spaces) to provide extra encryption, or leave blank for no cipher: ")
     print("Loading...")
     start_time = time.time()
     color_map = decrypt(key)
@@ -149,21 +149,50 @@ elif operation == 2:
 elif operation == 3:
     while True:
         try:
-            print("WARNING: This will erase your current image file!")
-            square = int(input("What should the width and height of the square be? (leave blank for standard 256x256): "))
-            if square > 2048:
-                print("The size of the square is too big!")
-            elif square < 0:
-                print("The size of the square cannot be less than 0!")
-                break
+            print("\nWARNING: This will erase your current image file!")
+            print("Enter two values separated by spaces for width and height,")
+            print("one value for a uniform square, or leave blank for default (256x256).")
+            square = input("What should the width and height of the square be?\n").strip()
+            
+            if square == "":
+                width, height = 256, 256
+            else:
+                square_values = square.split()
+                if len(square_values) == 1:
+                    try:
+                        width = height = int(square_values[0])
+                    except ValueError:
+                        print("Invalid input")
+                        continue
+                elif len(square_values) == 2:
+                    try:
+                        width = int(square_values[0])
+                        height = int(square_values[1])
+                    except ValueError:
+                        print("Invalid values")
+                        continue
+                else:
+                    print("Invalid input format (please enter one or two numbers)")
+                    continue
+
+            if width > 2048 or height > 2048:
+                print("The size is too big! Maximum is 2048x2048.")
+                print("You can still import a larger image file, however.")
+                continue
+            elif width <= 0 or height <= 0:
+                print("The size must be greater than 0")
+                continue
             else:
                 break
-        except:
-            square = 256
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            width, height = 256, 256
             break
     
-    img = Image.new("RGB", (square, square), (0, 0, 0))
+    img = Image.new("RGB", (width, height), (0, 0, 0))
     img.save("img.png")
     print("New square created!")
+
 elif operation == 4:
     quit(1)
