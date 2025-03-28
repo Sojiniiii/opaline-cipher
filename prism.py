@@ -146,7 +146,7 @@ while True:
             color_map[x] = rgb_to_hex(color_map[x])
         color_map = ''.join(color_map)
         text_output = ''.join([chr(int(color_map[i:i+2], 16)) for i in range(0, len(color_map), 2)])
-        with open("text.txt", "w") as file:
+        with open("text.txt", "w", encoding='utf-8') as file:
             file.write(text_output)
         end_time = time.time()
         print("Finished writing to file in " + str(end_time - start_time) + " seconds")
