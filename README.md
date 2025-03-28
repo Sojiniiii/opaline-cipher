@@ -1,4 +1,6 @@
-# prism-cipher
+<h1 align=center>
+prism-cipher
+</h1>
 
 <h1 align=center>
   <img src=https://github.com/user-attachments/assets/944a7987-c0fd-4a49-8255-175df9dbb1e0>
