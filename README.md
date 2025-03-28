@@ -25,7 +25,7 @@ First, download prism.py and place it in its own folder somewhere. If you do not
 Next, open your preferred terminal and go to the folder you have created (or the folder it is located in) with cd. Then, run it in Python, and you're good to go! Please keep in mind that if you have an outside file that you want to decrypt, you will have to change the selected directory.
 <h2>Update Plan</h2>
 <ul>
-  <li>✅ - Ability to choose Files to import/export</li>
+  <li>✅ - Ability to choose files to import/export</li>
   <li>⬜ - Option to automatically resize output image</li>
   <li>⬜ - Ability to encrypt other files (dat, pdf, etc.)</li>
   <li>⬜ - GUI improvements in cmd</li>
