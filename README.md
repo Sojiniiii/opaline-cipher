@@ -29,3 +29,5 @@ To use the program, you must first select a target file directory to encrypt or 
   <li>⬜ - Support for encryption/decryption in WAV</li>
   <li>⬜ - Support for encryption/decryption in MP4</li>
 </ul>
+<h2>Prism Cipher is now Opalite</h2>
+Support for encryption and decryption with WAV files is planned very soon. Because of the fact that the cipher is no longer going to be based solely around images (and, admittedly, there are way too many programs already named prism), I am going to be renaming the program from Prism to Opalite, and updating the logo! This change will take place after the next update, v1.1.
