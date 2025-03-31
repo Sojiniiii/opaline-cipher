@@ -1,4 +1,4 @@
-# prism-cipher
+# opaline-cipher
 
 <img src=https://github.com/user-attachments/assets/6ccced97-d7fa-4c10-99db-c7a4ae052554>
 
@@ -14,7 +14,7 @@ Takes a file and makes it into an image
 This is a script that both encrypts and decrypts text through the medium of color, written entirely in Python.
 <br>
 <br>
-Prism Cipher is a lightweight, simple script that can encrypt any file into an image, and decrypt it back again. You can also add as many keys as you need to the cipher in order to make it significantly more difficult to decode, and you can encrypt/decrypt images in any width and height. For example, here's the entire Bee Movie script (in .txt format), encrypted with Prism (no ciphers used). Feel free to use my program to decrypt it!
+Opaline is a lightweight, simple script that can encrypt any file into an image, and decrypt it back again. You can also add as many keys as you need to the cipher in order to make it significantly more difficult to decode, and you can encrypt/decrypt images in any width and height. For example, here's the entire Bee Movie script (in .txt format), encrypted with Prism (no ciphers used). Feel free to use my program to decrypt it!
 <p> </p>
 <img src=https://github.com/user-attachments/assets/f2ca46ff-28ae-4651-8b3c-28ee4ff9d114>
 <br>
@@ -29,5 +29,3 @@ To use the program, you must first select a target file directory to encrypt or 
   <li>⬜ - Support for encryption/decryption in WAV</li>
   <li>⬜ - Support for encryption/decryption in MP4</li>
 </ul>
-<h2>Prism Cipher is now Opalite</h2>
-Support for encryption and decryption with WAV files is planned very soon. Because of the fact that the cipher is no longer going to be based solely around images (and, admittedly, there are way too many programs already named prism), I am going to be renaming the program from Prism to Opalite, and updating the logo! This change will take place after the next update, v1.1.
