@@ -422,10 +422,10 @@ def main():
                 print("  2. Audio (waveform)")
                 print("-" * 60)
 
-                media_choice = input("Choose output format (image or wav) [default: image]: ") or 1
+                media_choice = input("Choose output format (default = image): ") or 1
 
                 try:
-                    c = int(media_choice)
+                    media_choice = int(media_choice)
                 except ValueError:
                     print("\nInvalid choice. Defaulting to image.")
                     media_choice = 1
