@@ -26,6 +26,6 @@ Once you download the file, open your preferred terminal and go to the folder yo
 To use the program, you must first select a target file directory to encrypt or decrypt. You can do this by choosing option 3 in the main menu. After you have done so, the program will send you back to the main menu with your file selected. To turn your file into an image, press 1, and the program will walk you through the process. Decrypting an already encrypted image follows a similar process, but keep in mind that you will have to provide your own file extension as well. This means that you will have to include the type of file you want the program to decrypt the image into, such as "img.jpg", "text.txt", or "archive.zip".
 <h2>Update Plan</h2>
 <ul>
-  <li>⬜ - Support for encryption/decryption in WAV</li>
+  <li>✅ - Support for encryption/decryption in WAV</li>
   <li>⬜ - Support for encryption/decryption in MP4</li>
 </ul>
