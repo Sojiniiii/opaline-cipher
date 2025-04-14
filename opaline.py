@@ -415,21 +415,32 @@ def main():
                     print("Error: No target file selected. Please use option 1 first.")
                     input("\nPress Enter to continue...")
                     continue
+                
+                print("-" * 60)
+                print("Choose an output format: ")
+                print("  1. Image (png)")
+                print("  2. Audio (waveform)")
+                print("-" * 60)
 
-                media_choice = input(
-                    "Choose output format (image or wav) [default: image]: ").strip().lower() or 'image'
+                media_choice = input("Choose output format (image or wav) [default: image]: ") or 1
+
+                try:
+                    c = int(media_choice)
+                except ValueError:
+                    print("\nInvalid choice. Defaulting to image.")
+                    media_choice = 1
 
                 output_media_path = ""
                 media_type = ""
 
-                if media_choice == 'image':
+                if media_choice == 1:
                     media_type = 'image'
                     output_media_path = input(
-                        f"Enter output IMAGE filename (blank uses '{img_path_default}'): ").strip() or img_path_default
-                elif media_choice == 'wav':
+                        f"Enter output png filename (blank uses '{img_path_default}'): ").strip() or img_path_default
+                elif media_choice == 2:
                     media_type = 'wav'
                     output_media_path = input(
-                        f"Enter output WAV filename (blank uses '{wav_path_default}'): ").strip() or wav_path_default
+                        f"Enter output wav filename (blank uses '{wav_path_default}'): ").strip() or wav_path_default
                     
                 key = input("Enter optional encryption key (hex values separated by spaces), or leave blank: ").strip()
                 encrypt_file(target_file, output_media_path, media_type, key)
