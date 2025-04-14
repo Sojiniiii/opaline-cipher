@@ -246,7 +246,7 @@ def encrypt_file(target_data_file, output_media_path, media_type, key_str):
     if media_type == 'image':
         target_dims = None
         if os.path.exists(output_media_path):
-            preserve = input(f"Output image '{output_media_path}' exists. Preserve its dimensions? (y/n, default n): ").strip().lower()
+            preserve = input(f"Output image '{output_media_path}' exists. Preserve its dimensions? (y/n, default = n): ").strip().lower()
             if preserve == 'y':
                 print("Attempting to use existing image dimensions...")
                 _, existing_dims = load_image(output_media_path)
@@ -359,14 +359,13 @@ def decrypt_file(input_media_path, media_type, key_str, output_filepath):
         print(f"Error writing decrypted file '{output_filepath}': {e}")
 
 def select_target_file():
-    # Lets user select the target
-    print("\nPlease select the target file (the file you want to encrypt/hide)")
+    print("\nPlease select the target file...")
 
     root = Tk()
     root.withdraw()
     root.attributes('-topmost', True)
     selected_path = filedialog.askopenfilename(
-        title="Select Target File to Encrypt"
+        title="Select Target"
     )
     root.destroy()
 
@@ -420,6 +419,7 @@ def main():
                 print("Choose an output format: ")
                 print("  1. Image (png)")
                 print("  2. Audio (waveform)")
+                print("  3. Exit")
                 print("-" * 60)
 
                 media_choice = input("Choose output format (default = image): ") or 1
@@ -441,6 +441,9 @@ def main():
                     media_type = 'wav'
                     output_media_path = input(
                         f"Enter output wav filename (blank uses '{wav_path_default}'): ").strip() or wav_path_default
+                elif media_choice == 3:
+                    display_ui(target_file)
+                    continue
                     
                 key = input("Enter optional encryption key (hex values separated by spaces), or leave blank: ").strip()
                 encrypt_file(target_file, output_media_path, media_type, key)
@@ -461,7 +464,7 @@ def main():
 
                 key = input("Enter optional decryption key (hex values separated by spaces), or leave blank: ").strip()
                 out_file = input(
-                    "Enter desired filename for the DECRYPTED file (e.g., 'doc.txt', 'archive.zip'): ").strip()
+                    "Enter desired filename for the decrypted file (e.g., 'doc.txt', 'archive.zip', leave blank to cancel): ").strip()
                 decrypt_file(target_file, media_type, key, out_file)
             elif n == 4:
                 print("Exiting Opaline. Goodbye! :)")
