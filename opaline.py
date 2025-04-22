@@ -21,7 +21,7 @@ def phk(key_str):
     keys = []
     try:
         for part in key_str.split():
-            # Ensure part is stripped and handle potential empty strings if spaces are doubled
+            # Cleaning the part (ensuring it is stripped and removing double spaces)
             cleaned_part = part.strip()
             if cleaned_part:
                 keys.append(int(cleaned_part, 16))
@@ -38,7 +38,7 @@ def rgb_to_hex(rgb):
     if not isinstance(rgb, (tuple, list)) or len(rgb) < 3:
         return "000000"
     try:
-        # Ensure values are within byte range
+        # Values must be within byte range
         r, g, b = [max(0, min(255, int(x))) for x in rgb[:3]]
         return f'{r:02x}{g:02x}{b:02x}'
     except (ValueError, TypeError):
@@ -76,7 +76,7 @@ def rgb_list_to_bytes(rgb_list):
     # Converts a list of RGB tuples back to bytes directly.
     byte_list = bytearray()
     for rgb in rgb_list:
-        # Ensure RGB values are valid bytes (0-255)
+        # RGB values must be valid bytes (0-255)
         try:
             # Clamp values just in case PIL provides something unexpected, though it shouldn't
             r, g, b = [max(0, min(255, int(x))) for x in rgb[:3]]
@@ -127,14 +127,14 @@ def load_image(filepath):
 
         # Get pixel data as a flat list of RGB tuples
         pixels = list(img.getdata())
-        img.close() # Ensure the file handle is released
+        img.close()
         return pixels, original_size
 
     except FileNotFoundError:
         print(f"Error: Image file not found at '{filepath}'")
         return None, None
     except UnidentifiedImageError:
-        print(f"Error: Cannot identify image file. Is '{filepath}' a valid image format supported by PIL?")
+        print(f"Error: Cannot identify image file. Is '{filepath}' a valid image format? (is it supported by PIL?)")
         return None, None
     except Exception as e:
         # Catch any other unexpected errors during image loading
@@ -155,8 +155,7 @@ def prep_image(data_bytes, key_list, output_image_path, target_dims=None):
 
     if use_auto_resize:
         print("Calculating optimal image size...")
-        # Calculate dimensions for an approximately square image
-        # Ensure width and height are at least 1
+        # Calculate dimensions for an approximately square image (width and height must be at least 1)
         width = max(1, math.ceil(math.sqrt(required_pixels)))
         height = max(1, math.ceil(required_pixels / width))
         print(f"Auto-calculated image size: {width}x{height}")
