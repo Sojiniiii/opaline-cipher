@@ -175,30 +175,27 @@ def prep_image(data_bytes, key_list, output_image_path, target_dims=None):
 
     print(f"Creating image '{output_image_path}'...")
     try:
-        # Create a new RGB image
+        # Creates the image and puts the data into it
         img = Image.new("RGB", (width, height))
-        # Put the pixel data into the image
-        # Note: putdata expects a sequence of pixel values. padded_rgb is a list of tuples.
+        # putdata expects a sequence of pixel values; padded_rgb is a list of tuples.
         img.putdata(padded_rgb)
-        # Save the image as PNG (lossless)
         img.save(output_image_path, format='PNG')
-        img.close() # Release image resources
+        img.close()
         print("Image created/updated successfully.")
-        return True # Indicate success
+        return True
     except Exception as e:
         print(f"Error creating or saving image: {e}")
-        return False # Indicate failure
+        return False
 
 # --- WAV Handling (Stereo Enabled) ---
 def prep_wav(data_bytes, key_list, output_wav_path, sample_rate=44100, sample_width=2):
-    # Encrypts byte data and saves it into a **STEREO** WAV audio file.
+    # Encrypts byte data and saves it into a stereo WAV audio file.
     print("Encrypting data with cipher (if key provided)...")
     encrypted_bytes = cipher(data_bytes, key_list, encrypting=True)
 
-    # Determine WAV parameters
-    num_channels = 2  # Use **STEREO** (2 channels)
-    # sample_width = 2 # Bytes per sample (1=8-bit, 2=16-bit) - passed as argument
-    bytes_per_frame = num_channels * sample_width # For stereo: 2 * sample_width
+    # Determine WAV parameters.
+    num_channels = 2 # < This program converts files into stereo by default. Feel free to change this value to 1 for mono audio (it's not going to sound particularly pleasant either way)
+    bytes_per_frame = num_channels * sample_width
 
     # Pad data to align with frame size (important for stereo)
     remainder = len(encrypted_bytes) % bytes_per_frame # Use bytes_per_frame
@@ -207,10 +204,9 @@ def prep_wav(data_bytes, key_list, output_wav_path, sample_rate=44100, sample_wi
         encrypted_bytes += b'\x00' # Add null bytes for padding
         print(f"Padded data with {padding_needed} zero bytes for WAV frame alignment (Stereo).")
 
-    # Calculate the number of frames
     num_frames = len(encrypted_bytes) // bytes_per_frame
 
-    print(f"Creating **STEREO** WAV file '{output_wav_path}'...")
+    print(f"Creating stereo WAV file '{output_wav_path}'...")
     try:
         with wave.open(output_wav_path, 'wb') as wf:
             wf.setnchannels(num_channels)
@@ -228,8 +224,7 @@ def prep_wav(data_bytes, key_list, output_wav_path, sample_rate=44100, sample_wi
         return False
 
 def load_wav(filepath):
-    # Loads a WAV file and returns its raw frame data as bytes.
-    # This function works for both mono and stereo, as it reads the raw byte stream.
+    # Loads a WAV file and returns its raw frame data as bytes. It works for both stereo and mono because it reads the raw bytestream.
     try:
         with wave.open(filepath, 'rb') as wf:
             # You could add checks here: wf.getnchannels(), wf.getsampwidth() etc. if needed
@@ -249,7 +244,7 @@ def load_wav(filepath):
 
 # --- Core encryption/decryption Logic ---
 def encrypt_file(target_data_file, output_media_path, media_type, key_str):
-    """Handles encrypting the target data file into the specified media type."""
+    # Handles encrypting the target data file into the specified media type.
     if not target_data_file:
         print("Error: No target data file selected for encryption input. Use 'Select Target' first.")
         return
@@ -309,7 +304,6 @@ def encrypt_file(target_data_file, output_media_path, media_type, key_str):
             sr = int(sr_str) if sr_str else 44100
             sw = int(sw_str) if sw_str else 2
 
-            # Validate sample width and sample rate
             if sw not in [1, 2]:
                 raise ValueError("Sample width must be 1 or 2")
             if sr <= 0:
@@ -322,7 +316,7 @@ def encrypt_file(target_data_file, output_media_path, media_type, key_str):
         success = prep_wav(data_to_process, keys, output_media_path, sample_rate=sr, sample_width=sw)
 
     else:
-        # If this point is reached, something has gone very very wrong :(
+        # If this point is reached, something has gone very wrong :(
         print(f"Error: Unknown media type '{media_type}' for encryption.")
         return
 
@@ -334,7 +328,7 @@ def encrypt_file(target_data_file, output_media_path, media_type, key_str):
 
 
 def decrypt_file(input_media_path, media_type, key_str, output_filepath):
-    """Handles decrypting a file from the specified media type."""
+    # Handles decrypting a file from the specified media type.
     if not output_filepath:
         print("Output filename cannot be empty. Aborting decryption.")
         return
@@ -355,7 +349,6 @@ def decrypt_file(input_media_path, media_type, key_str, output_filepath):
 
         raw_data_bytes = rgb_list_to_bytes(pixels)
 
-    # Works whether you use stereo/mono
     elif media_type == 'wav':
         raw_data_bytes = load_wav(input_media_path)
         if raw_data_bytes is None:
@@ -377,8 +370,7 @@ def decrypt_file(input_media_path, media_type, key_str, output_filepath):
     print("Decrypting byte stream with cipher (if key provided)...")
     all_decrypted_bytes = cipher(raw_data_bytes, keys, encrypting=False)
 
-    # 3. Extract original file size and data
-    # Check if the decrypted data is long enough to contain the size header
+    # 3. Extract original file size and data (and check if the decrypted data is long enough to contain the size header)
     if len(all_decrypted_bytes) < SIZE_BYTES_LEN:
         print(f"Error: Decrypted data stream is too short ({len(all_decrypted_bytes)} bytes) to contain file size info ({SIZE_BYTES_LEN} bytes).")
         print(" Possible reasons: incorrect key, corrupted file, file not created by this program, or incorrect media type selected.")
@@ -386,7 +378,7 @@ def decrypt_file(input_media_path, media_type, key_str, output_filepath):
 
     print("Extracting original file size and data...")
     try:
-        # Slice the first SIZE_BYTES_LEN bytes for the size header
+        # Slice the first bytes for the size header
         size_bytes = all_decrypted_bytes[:SIZE_BYTES_LEN]
         # Unpack the size bytes back into an integer
         original_size = struct.unpack(SIZE_STRUCT_FORMAT, size_bytes)[0]
@@ -395,8 +387,7 @@ def decrypt_file(input_media_path, media_type, key_str, output_filepath):
         # Slice the remaining bytes as the original file data
         extracted_file_data = all_decrypted_bytes[SIZE_BYTES_LEN:]
 
-        # 4. Truncate data to the original size
-        # This step removes any padding added during encryption (e.g., for WAV alignment or image pixel padding)
+        # 4. Truncate data to the original size (removing any padding added during encryption, like for WAV alignment or image pixel padding)
         if len(extracted_file_data) < original_size:
             print(f"Warning: Actual data length ({len(extracted_file_data)}) is less than expected original size ({original_size}).")
             print("File might be incomplete or corrupted.")
@@ -410,7 +401,7 @@ def decrypt_file(input_media_path, media_type, key_str, output_filepath):
         print(f"Error unpacking file size: {e}. Media file data may be corrupted, the key might be wrong, or it's not an Opaline file.")
         return
     except Exception as e:
-        # uh oh
+        # uh oh :(
         print(f"An unexpected error occurred during data extraction: {e}")
         return
 
@@ -429,7 +420,7 @@ def decrypt_file(input_media_path, media_type, key_str, output_filepath):
 
 # --- File Selection ---
 def select_target_file():
-    """Opens a file dialog for the user to select a target file."""
+    # Opens a file dialog for the user to select a target file.
     print("\nPlease select the target file (file to encrypt or media file to decrypt)...")
 
     root = Tk()
@@ -450,13 +441,12 @@ def select_target_file():
 
 # --- User Interface ---
 def display_ui(target_data_file):
-    """Clears the screen and displays the main menu options."""
+    # Clears the screen and displays the main menu options.
     os.system('cls' if os.name == 'nt' else 'clear')
     print("\n-=- Opaline by Alex Hall -=-\n")
     print("-" * 60)
     print(f"Current target: {target_data_file if target_data_file else 'unset'}")
     print("-" * 60)
-    # Display menu options
     print("Choose an operation:")
     print("  1. Select target")
     print("  2. Encrypt target")
@@ -466,7 +456,7 @@ def display_ui(target_data_file):
 
 
 def main():
-    """Main execution loop for the program."""
+    # Main execution loop for the program.
     target_file = None # Variable to store the path of the selected target file
     # Default filenames (feel free to change these at the beginning of the program, if you're reading this)
     png_path_default = DEFAULT_PNG_FILENAME
@@ -583,7 +573,7 @@ def main():
             print("\nInvalid input. Please enter a number (1-4).")
             input("Press Enter to continue...") # Pause for user to read message
 
-        # --- Keyboard interrupt ---
+        # --- Exit key is Control + C (good to remember if something goes wrong) ---
         except KeyboardInterrupt:
             print("\n\nOperation cancelled by user (Ctrl+C). Exiting.")
             break
@@ -595,6 +585,6 @@ def main():
             traceback.print_exc()
             input("\nPress Enter to continue...")
 
-# --- By Alex Hall ---
+# --- By Alex Hall :) ---
 if __name__ == "__main__":
     main()
