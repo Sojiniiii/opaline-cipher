@@ -7,7 +7,6 @@ from tkinter import filedialog, Tk
 from PIL import Image, UnidentifiedImageError
 
 # --- Configuration ---
-options = []
 def defaults():
     defpng = "image.png"
     defwav = "audio.wav
@@ -18,6 +17,7 @@ try:
         if not lines:
             defaults()
         else:
+            options = []
             for line in lines:
                 options.append(line.strip())
             defpng = options[0].strip()
@@ -25,7 +25,7 @@ try:
             try:
                 aformat = int(options[2].strip())
             except ValueError:
-                print("Invalid audio format (line 3 of options). Is it a number?")
+                print("Invalid audio format (line 3 of options.txt). Is it a number?")
                 print("Defaulting to stereo...")
                 aformat = 2
     file.close()
@@ -168,7 +168,7 @@ def prep_image(data_bytes, key_list, output_image_path, target_dims=None):
     print("Encrypting data with cipher (if key provided)...")
     encrypted_bytes = cipher(data_bytes, key_list, encrypting=True)
 
-    print("Converting bytes to RGB pixel data (Optimized)...")
+    print("Converting bytes to RGB pixel data...")
     rgb_data = bytes_to_rgb_list(encrypted_bytes)
     required_pixels = len(rgb_data)
 
@@ -366,7 +366,7 @@ def decrypt_file(input_media_path, media_type, key_str, output_filepath):
         if pixels is None:
             print("File decryption failed (could not load image pixels).")
             return
-        print("Converting pixels to byte stream (Optimized)...")
+        print("Converting pixels to byte stream...")
 
         raw_data_bytes = rgb_list_to_bytes(pixels)
 
