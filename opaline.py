@@ -7,8 +7,30 @@ from tkinter import filedialog, Tk
 from PIL import Image, UnidentifiedImageError
 
 # --- Configuration ---
-DEFAULT_PNG_FILENAME = "image.png"
-DEFAULT_WAV_FILENAME = "audio.wav"
+options = []
+def defaults():
+    defpng = "image.png"
+    defwav = "audio.wav
+    aformat = 2
+try:
+    with open("options.txt", "r") as file:
+        lines = file.readlines()
+        if not lines:
+            defaults()
+        else:
+            for line in lines:
+                options.append(line.strip())
+            defpng = options[0].strip()
+            defwav = options[1].strip()
+            try:
+                aformat = int(options[2].strip())
+            except ValueError:
+                print("Invalid audio format (line 3 of options). Is it a number?")
+                print("Defaulting to stereo...")
+                aformat = 2
+    file.close()
+except:
+    defaults()
 # - Do not change if you don't know what you're doing -
 SIZE_STRUCT_FORMAT = '>Q'
 SIZE_BYTES_LEN = struct.calcsize(SIZE_STRUCT_FORMAT)
@@ -186,14 +208,14 @@ def prep_image(data_bytes, key_list, output_image_path, target_dims=None):
         print(f"Error creating or saving image: {e}")
         return False
 
-# --- WAV Handling (Stereo Enabled) ---
+# --- WAV Handling ---
 def prep_wav(data_bytes, key_list, output_wav_path, sample_rate=44100, sample_width=2):
-    # Encrypts byte data and saves it into a stereo WAV audio file.
+    # Encrypts byte data and saves it into a WAV audio file.
     print("Encrypting data with cipher (if key provided)...")
     encrypted_bytes = cipher(data_bytes, key_list, encrypting=True)
 
     # Determine WAV parameters.
-    num_channels = 2 # < This program converts files into stereo by default. Feel free to change this value to 1 for mono audio (it's not going to sound particularly pleasant either way)
+    num_channels = aformat # Converts into either stereo or mono (it's not going to sound pleasant either way)
     bytes_per_frame = num_channels * sample_width
 
     # Pad data to align with frame size (important for stereo)
@@ -201,11 +223,11 @@ def prep_wav(data_bytes, key_list, output_wav_path, sample_rate=44100, sample_wi
     if remainder != 0:
         padding_needed = bytes_per_frame - remainder
         encrypted_bytes += b'\x00' # Add null bytes for padding
-        print(f"Padded data with {padding_needed} zero bytes for WAV frame alignment (Stereo).")
+        print(f"Padded data with {padding_needed} zero bytes for WAV frame alignment.")
 
     num_frames = len(encrypted_bytes) // bytes_per_frame
 
-    print(f"Creating stereo WAV file '{output_wav_path}'...")
+    print(f"Creating WAV file '{output_wav_path}'...")
     try:
         with wave.open(output_wav_path, 'wb') as wf:
             wf.setnchannels(num_channels)
@@ -213,7 +235,7 @@ def prep_wav(data_bytes, key_list, output_wav_path, sample_rate=44100, sample_wi
             wf.setframerate(sample_rate)
             wf.setnframes(num_frames)
             wf.writeframes(encrypted_bytes)
-        print("Stereo WAV file created successfully.")
+        print("WAV file created successfully.")
         return True
     except wave.Error as e:
         print(f"Error writing WAV file: {e}")
@@ -558,8 +580,47 @@ def main():
                     decrypt_file(target_file, media_type, key, out_file)
                 input("\nPress Enter to continue...")
 
-            # --- Option 4: Exit ---
+            # --- Option 4: Options ---
             elif n == 4:
+                while True:
+                    print("-"*60)
+                    print("Choose an option to change (writes these to option.txt): ")
+                    print(f"  1. Default image file name: {defpng}")
+                    print(f"  2. Default audio file name: {defwav}")
+                    if aformat == 1:
+                        print("  3. Audio format: Mono")
+                    elif aformat == 2:
+                        print("  3. Audio format: Stereo") # as it should be
+                    print("  4. Exit without saving")
+                    print("  5. Save and exit")
+                    print("-"*60)
+                    option = input("Enter choice: ")
+                    if option == 1:
+                        new = input("Enter the new default image file name: ")
+                        if new[-3:] != ".png":
+                            new += ".png"
+                        defpng = new
+                    elif option == 3:
+                        if aformat == 2:
+                            aformat = 1
+                        else:
+                            aformat = 2
+                    elif option == 5:
+                        print("Saving and exiting...")
+                        with open("options.txt", "w") as file:
+                            file.write(str(aformat) + "\n")
+                            file.write(defpng + "\n")
+                            file.write(defwav)
+                        file.close()
+                        break
+                    else:
+                        print("Are you sure you want to exit without saving?")
+                        exit = input("Press enter to exit without saving. Enter anything else to go back. ")
+                        if not exit:
+                            break
+            
+            # --- Option 5: Exit ---
+            elif n == 5:
                 print("Exiting Opaline. Goodbye! :)")
                 break   
 
