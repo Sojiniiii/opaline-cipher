@@ -25,9 +25,8 @@ Once you download the file, open your preferred terminal and go to the folder yo
 <br> <br>
 To use the program, you must first select a target file directory to encrypt or decrypt. You can do this by choosing option 1 in the main menu. After you have done so, the program will send you back to the main menu with your file selected. To turn your file into either an image or a wav, press 2, and the program will walk you through the process. Decrypting an already encrypted file follows a similar process, but keep in mind that you will have to provide your own file extension as well. This means that you will have to include the type of file you want the program to decrypt the image into, such as "img.jpg", "text.txt", or "archive.zip".
 
-<h2>Opaline-Kaleidoscope</h2>
-<a href=https://www.youtube.com/watch?v=Y-8UJZAH6Mw>Progress Video</a> - Windows XP encoded in Opaline-Kaleidoscope
-
+<h2>Kaleidoscope</h2>
+<a href=https://www.youtube.com/watch?v=Y-8UJZAH6Mw>Progress Video</a> - Windows XP encoded in Kaleidoscope (unable to be decrypted accurately due to the YouTube encryption algorithm)
 <h2>Update Plan</h2>
 <ul>
   <li>✅ - Support for encryption/decryption in WAV</li>
