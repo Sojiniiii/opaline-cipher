@@ -30,5 +30,5 @@ To use the program, you must first select a target file directory to encrypt or 
 <h2>Update Plan</h2>
 <ul>
   <li>✅ - Support for encryption/decryption in WAV</li>
-  <li>⬜ - (opaline-kaleidoscope) Support for encryption/decryption in MP4</li>
+  <li>🟨 - Support for encryption/decryption in MP4 (Kaleidoscope cannot yet bypass YouTube compression algorithms)</li>
 </ul>
