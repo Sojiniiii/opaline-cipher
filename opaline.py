@@ -9,7 +9,7 @@ from PIL import Image, UnidentifiedImageError
 # --- Configuration ---
 def defaults():
     return ("image.png", "audio.wav", 2) #Default image name, default file name, and audio format (1 = mono, 2 = stereo)
-# Do not change the following if you don't know what you're doing!
+# Do not change the following if you don't know what you're doing
 SIZE_STRUCT_FORMAT = '>Q'
 SIZE_BYTES_LEN = struct.calcsize(SIZE_STRUCT_FORMAT)
 
@@ -575,12 +575,13 @@ def main():
                 
                 media_type = ext
                 key = input("Enter optional decryption key used during encryption (hex values separated by spaces), or leave blank if no key was used: ").strip()
-                print("\nThis next step is important. You must enter the a file name and the correct file extension.")
+                print("\nThis next step is important.\nYou must enter the file name and the correct file extension.")
                 out_file = input(
-                    "Enter desired filename for the decrypted file (e.g., 'document.txt', 'archive.zip'): ").strip()
+                    "Enter desired filename for the decrypted file (default = archive.zip): ").strip()
 
                 if not out_file:
-                    print("\nNo output filename provided. Decryption cancelled.")
+                    out_file = "archive.zip"
+                    decrypt_file(target_file, media_type, key, out_file)
                 else:
                     decrypt_file(target_file, media_type, key, out_file)
                 input("\nPress Enter to continue...")
